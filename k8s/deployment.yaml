@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kgs-upload-deployment
+  labels:
+    app: kgs-upload
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kgs-upload
+  template:
+    metadata:
+      labels:
+        app: kgs-upload
+    spec:
+      containers:
+      - name: kgs-upload
+        image: your-image-registry/your-image
+        ports:
+        - containerPort: 8000
+        env:
+        - name: NEO4J_URI
+          value: {{NEO4J_URI}}
+        - name: NEO4J_USERNAME
+          value: {{NEO4J_USERNAME}}
+        - name: NEO4J_PASSWORD
+          value: {{NEO4J_PASSWORD}}

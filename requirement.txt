@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+python-multipart
+neo4j >= 5.8.0
