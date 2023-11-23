@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kgs-upload-deployment
+  namespace: {{NAMESPACE}}
   labels:
     app: kgs-upload
 spec:
@@ -20,6 +21,8 @@ spec:
         ports:
         - containerPort: 8000
         env:
+        - name: NAMESPACE
+          value: {{NAMESPACE}}
         - name: NEO4J_URI
           value: {{NEO4J_URI}}
         - name: NEO4J_USERNAME

@@ -13,6 +13,7 @@ echo "⏳ - Starting deployment of KGS-UPLOAD in ${NAMESPACE}"
 
 echo "⏳ - Deploying KGS-UPLOAD Deployment ..." 
 kgsuploadDeployment=`cat "k8s/deployment.yaml" | \
+            sed "s|{{NAMESPACE}}|$NAMESPACE|g" | \
             sed "s|{{NEO4J_URI}}|$NEO4J_URI|g" | \
             sed "s|{{NEO4J_USERNAME}}|$NEO4J_USERNAME|g" | \
             sed "s|{{NEO4J_PASSWORD}}|$NEO4J_PASSWORD|g"`

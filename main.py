@@ -5,6 +5,7 @@ from neo4j import GraphDatabase
 
 app = FastAPI()
 
+NAMESPACE = os.environ.get("NAMESPACE")
 NEO4J_URI = os.environ.get("NEO4J_URI")
 NEO4J_USERNAME = os.environ.get("NEO4J_USERNAME")
 NEO4J_PASSWORD = os.environ.get("NEO4J_PASSWORD")
@@ -57,13 +58,13 @@ async def upload_dump(file: UploadFile = File(...)):
     primary_leader_uuid = get_primary_leader_uuid(primary_leader_address)
 
     # Copy the dump to the Neo4j Leader (This can be skip by using a mounted volume)
-    command_cp = f"kubectl cp {directory_path} cluster-demo/{primary_leader}-0:/import/"
+    command_cp = f"kubectl cp {directory_path} {NAMESPACE}/{primary_leader}-0:/import/"
     stdout_cp, stderr_cp, returncode_cp = execute_command(command_cp)
     if returncode_cp != 0:
         return {"error": stderr_cp.decode()}
 
     # Load the dump into the Leader
-    command_exec = f"kubectl exec --stdin --tty -n cluster-demo {primary_leader}-0 -- neo4j-admin database load --from-path=/import/{file_name_without_extension} {file_name_without_extension} --expand-commands --verbose"
+    command_exec = f"kubectl exec --stdin --tty -n {NAMESPACE} {primary_leader}-0 -- neo4j-admin database load --from-path=/import/{file_name_without_extension} {file_name_without_extension} --expand-commands --verbose"
     stdout_exec, stderr_exec, returncode_exec = execute_command(command_exec)
     if returncode_exec != 0:
         return {"error": stderr_exec.decode()}
